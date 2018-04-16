@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!-- 配置 -->
+<configuration>
+<!-- 引入资源文件 -->
+	<properties resource="database.properties"></properties>
+<!-- 修改MyBatis在运行的时行为方式 -->
+	<settings>
+		<!-- 配置log实现为LOG4J -->
+		<setting name="logImpl" value="LOG4J"></setting>
+		<!-- 映射NONE不自动匹配,PARTIAL默认，半自动，设置多少result元素就匹配多少，FULL全自动 匹配所有-->
+		<!--<setting name="autoMappingBehavior" value="NONE"/> -->
+	</settings>
+	<typeAliases>
+		<!--类型别名  -->
+		<!-- <typeAlias type="cn.easybuy.entity.User" alias="User"/> -->
+		<!-- 包别名 -->
+		<package name="cn.easybuy.entity"/>
+	</typeAliases>
+	<!-- 环境 -->
+	<environments default="development">
+	<!-- 环境变量 -->
+		<environment id="development">
+			<!-- 事务管理器 -->
+			<transactionManager type="JDBC"></transactionManager>
+			<!-- 数据源配置数据库连接 -->
+			<dataSource type="POOLED">
+			 <property name="driver" value="${driver}"/>
+				<property name="url" value="${url}"/>
+				<property name="username" value="${username}"/>
+				<property name="password" value="${password}"/>
+			</dataSource>
+		</environment>
+	</environments>
+	<!-- 映射器 -->
+	<mappers>
+		<mapper resource="cn/easybuy/dao/order/OrderMapper.xml"/>
+		<mapper resource="cn/easybuy/dao/product/ProductMapper.xml"/>
+		<mapper resource="cn/easybuy/dao/order/OrderDetailMapper.xml"/>
+		<mapper resource="cn/easybuy/dao/user/UserMapper.xml"/>
+	</mappers>
+</configuration>

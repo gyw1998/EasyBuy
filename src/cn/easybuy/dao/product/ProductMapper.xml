@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.easybuy.dao.product.ProductMapper">
+	<!--增加商品  -->
+	<insert id="add" parameterType="Product">
+	insert into easybuy_product(name,description,price,stock,categoryLevel1Id,categoryLevel2Id,categoryLevel3Id,fileName,isDelete) 
+	values(#{name},#{description},#{price},#{stock},#{categoryLevel1Id},#{categoryLevel2Id},#{categoryLevel3Id},#{fileName},0)
+	</insert>
+	<!--修改商品-->
+	<update id="update" parameterType="Product">
+	update easybuy_product 
+	<trim prefix="set" suffix="where id=#{id}">
+	<if test="name!=null">name=#{name}</if>
+	<if test="fileName!=null">fileName=#{fileName}</if>
+	<if test="categoryLevel1Id!=null">categoryLevel1Id=#{categoryLevel1Id}</if>
+	<if test="categoryLevel3Id!=null">categoryLevel3Id=#{categoryLevel3Id}</if>
+	<if test="categoryLevel3Id!=null">categoryLevel3Id=#{categoryLevel3Id}</if>
+	</trim>
+	</update>
+	<!-- 更新库存 -->
+	<update id="updateStock">
+	update easybuy_product 
+	<trim prefix="set" suffix="where id=#{id}">
+		<if test=" stock!=null">stock=#{stock}</if>
+	</trim>
+	</update>
+	<!--删除商品 -->
+	<delete id="deleteById" parameterType="Integer">
+	delete from easybuy_product where id = #{id}
+	</delete>
+	<!--查询商品 -->
+	<select id="getProductById" resultType="Product" parameterType="Integer">
+	 select id,name,description,price,stock,categoryLevel1Id,categoryLevel2Id,categoryLevel3Id,fileName,isDelete from easybuy_product where id = #{id}
+	</select>
+	<!--分页查询商品列表 -->
+	<select id="getProductList" resultType="Product">
+	 select *from easybuy_product  where 1=1
+	 <if test="name!=null and name!=''"> and name like concat('%',#{name},'%') </if>
+	 <if test="categoryId!=null">
+	  and (categoryLevel1Id =#{categoryId} 
+	  or categoryLevel2Id=#{categoryId}
+	  or categoryLevel3Id=#{categoryId})
+	 </if>
+	 limit #{currentPageNo},#{pageSize}
+	</select>
+	<!--查询商品数目 -->
+	<select id="queryProductCount" resultType="int">
+	 select count(*) count from easybuy_product where 1=1 
+	 <if test="name!=null and name!=''">
+	 	and name like concat('%',#{name},'%') 
+	 </if>
+	 <if test="categoryId!=null">
+	  and (categoryLevel1Id =#{categoryId} 
+	  or categoryLevel2Id=#{categoryId}
+	  or categoryLevel3Id=#{categoryId})
+	 </if>
+	</select>
+</mapper>
