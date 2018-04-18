@@ -263,6 +263,8 @@ function addUser() {
     var mobile = $("input[name='mobile']").val();
     var type = $("select[name='type']").val();
     var id = $("input[name='id']").val();
+    //console.log()打印
+    var sex=$("input[name='sex']:checked").val();
     var password = $("input[name='password']").val();
     $.ajax({
         url: contextPath + "/admin/user",
@@ -276,6 +278,7 @@ function addUser() {
            email: email,
            mobile: mobile,
            type: type,
+           sex: sex,
            password:password
         },
         success: function (jsonStr) {

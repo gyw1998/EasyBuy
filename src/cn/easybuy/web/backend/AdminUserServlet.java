@@ -124,7 +124,9 @@ public class AdminUserServlet extends AbstractServlet {
         }
         user.setLoginName(loginName);
         user.setUserName(request.getParameter("userName"));
-        user.setSex(EmptyUtils.isEmpty(sex) ? 1 : 0);
+        System.out.println(sex);
+        //user.setSex(EmptyUtils.isEmpty(sex) ? 1 : 0);
+        user.setSex(Integer.parseInt(sex));
         if (EmptyUtils.isEmpty(id) || id.equals("0")) {
         	user.setPassword(SecurityUtils.md5Hex(request.getParameter("password")));
         }

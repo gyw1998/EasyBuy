@@ -13,12 +13,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</delete> 
 	<!--查询订单详细 -->
 	<select id="getOrderDetailById" resultType="OrderDetail" parameterType="Integer">
-	select orderId,productId,quantity,cost from easybuy_order_detail where id = #{id}
-	</select> 
-	<!--查询所有订单列表详细 -->
-	<select id="getOrderDetailList" resultType="OrderDetail" parameterType="Integer">
 	select id,orderId,productId,quantity,cost FROM easybuy_order_detail where 1=1
 	and orderId=#{orderId}
+	</select> 
+	<resultMap type="OrderDetail" id="MyOrderDetail">
+		<result property="orderId" column="orderId"/>
+		<result property="productId" column="productId"/>
+		<result property="quantity" column="quantity"/>
+		<result property="cost" column="cost"/>
+		<association property="product" javaType="Product" resultMap="MyProduct"></association>
+	</resultMap>
+	<resultMap type="Product" id="MyProduct">
+		<id property="id" column="p_id"/>
+		<result property="name" column="name"/>
+		<result property="fileName" column="fileName"/>
+	</resultMap>
+	<!--查询所有订单列表详细 -->
+	<select id="getOrderDetailList" resultMap="MyOrderDetail" parameterType="Integer">
+	select orderId,productId,quantity,cost,p.id as p_id,p.name,p.fileName 
+	from 
+	easybuy_order_detail od,easybuy_product p 
+	where od.orderId = #{id} and od.productId=p.id
 	</select>	
 	<!--查询所有订单数目详细 -->
 	<select id="queryOrderDetailCount" resultType="Integer">

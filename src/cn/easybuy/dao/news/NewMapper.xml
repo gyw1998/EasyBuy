@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.easybuy.dao.news.NewMapper">
+<mapper namespace="cn.easybuy.dao.news.NewsMapper">
 <!--增加新闻 -->
 	<insert id="add" parameterType="News">
 		insert into easybuy_news(title,content,createTime)
@@ -12,25 +12,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<update id="update" parameterType="News">
 		update set easybuy_news 
 		<trim suffix="where id=#{id}">
-			<if test="title">title=#{title}</if>
-			<if test="content">content=#{content}</if>
-			<if test="createTime">createTime=#{createTime}</if>
+			<if test="title!=null">title=#{title}</if>
+			<if test="content!=null">content=#{content}</if>
 		</trim>
 	</update>
 <!-- 删除新闻 -->
-	<delete id="deleteById" parameterType="Integer">
+	<delete id="deleteById" parameterType="String">
 		delete from easybuy_news where id=#{id}
 	</delete>
 <!-- 查询新闻 -->
-	<select id="getNewsById" resultType="News" parameterType="Integer">
+	<select id="getNewsById" resultType="News" parameterType="String">
 		select * from easybuy_news where id=#{id}
 	</select>
 <!-- 查询新闻列表 -->
-	<select id="queryNewsList" resultType="News" parameterType="News">
+	<select id="queryNewsList" resultType="News">
 		select * from easybuy_news where 1=1
+		<if test="title!=null">and title like concat('%',#{title},'%')</if>
+		  order by #{sort} limit #{startIndex},#{pageSize}
 	</select>
 <!-- 查询新闻数目 -->
 	<select id="queryNewscount" resultType="int">
 			select count(*) from easybuy_news where 1=1
+			<if test="title!=null">and title like concat('%',#{title},'%')</if>
 	</select>
 </mapper>

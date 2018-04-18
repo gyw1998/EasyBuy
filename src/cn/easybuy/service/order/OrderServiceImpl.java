@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
 
+import javax.jms.Session;
+
 import org.apache.ibatis.session.SqlSession;
 
 import cn.easybuy.dao.order.*;
@@ -77,20 +79,24 @@ public class OrderServiceImpl implements OrderService {
     }
     @Override
     public List<Order> getOrderList(Integer userId, Integer currentPageNo, Integer pageSize) {
-        Connection connection = null;
         List<Order> orderList = new ArrayList<Order>();
+        SqlSession session = null;
         try {
-            connection = DataSourceUtil.openConnection();
-            OrderDao orderDao = new OrderDaoImpl(connection);
-            OrderDetailDao orderDetailDao=new OrderDetailDaoImpl(connection);
-            orderList = orderDao.getOrderList(userId, currentPageNo, pageSize);
+        	session = MyBatisUtil.createSession();
+        	OrderMapper orderMapper = session.getMapper(OrderMapper.class);
+        	OrderDetailMapper orderDetailMapper = session.getMapper(OrderDetailMapper.class);
+            System.out.println(pageSize);
+            System.out.println(currentPageNo + " : " + pageSize);
+            orderList = 
+            		orderMapper.getOrderList(userId, (currentPageNo - 1) * pageSize, pageSize);
             for(Order order:orderList){
-            	order.setOrderDetailList(orderDetailDao.getOrderDetailList(order.getId()));
+            	order.setOrderDetailList(orderDetailMapper.getOrderDetailList(order.getId()));
+            	System.out.println(order.getOrderDetailList().size());
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            DataSourceUtil.closeConnection(connection);
+           MyBatisUtil.closeSession(session);
         }
         return orderList;
     }

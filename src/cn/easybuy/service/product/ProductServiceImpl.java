@@ -23,9 +23,9 @@ public class ProductServiceImpl implements ProductService {
 			session.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
-			session.rollback();
 		} finally {
 			MyBatisUtil.closeSession(session);
+			session.rollback();
 		}
 		return count>0;
 	}
@@ -40,9 +40,9 @@ public class ProductServiceImpl implements ProductService {
 			session.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
-			session.rollback();
 		} finally {
 			MyBatisUtil.closeSession(session);
+			session.rollback();
 		}
 		return count>0;
 	}
@@ -56,9 +56,9 @@ public class ProductServiceImpl implements ProductService {
 			count=session.delete("cn.easybuy.dao.product.ProductMapper.deleteProductById",productId);
 		} catch (Exception e) {
 			e.printStackTrace();
-			session.rollback();
 		} finally {
 			MyBatisUtil.closeSession(session);
+			session.rollback();
 		}
 		return count>0;
 	}
@@ -72,7 +72,6 @@ public class ProductServiceImpl implements ProductService {
 			p=session.getMapper(ProductMapper.class).getProductById(productId);
 		} catch (Exception e) {
 			e.printStackTrace();
-			session.rollback();
 		} finally {
 			MyBatisUtil.closeSession(session);
 		}
@@ -86,10 +85,7 @@ public class ProductServiceImpl implements ProductService {
 		List<Product> productList=null;
 		try {
 			session=MyBatisUtil.createSession();
-			int total = count(name,categoryId,level);
-			Pager pager = new Pager(total, pageSize, currentPageNo);
-			productList=session.getMapper(ProductMapper.class).getProductList((pager.getCurrentPage() - 1) * pager.getRowPerPage(), 
-					pager.getRowPerPage(), name, categoryId, level);		
+			productList=session.getMapper(ProductMapper.class).getProductList((currentPageNo - 1) * pageSize,pageSize, name, categoryId, level);		
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

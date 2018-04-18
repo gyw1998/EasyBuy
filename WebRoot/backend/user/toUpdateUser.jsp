@@ -40,14 +40,15 @@
                             <input type="text" value="${user.userName}" class="add_ipt" name="userName"/>
                         </td>
                     </tr>
+                 
                     <c:if test="${empty user.id ||  user.id==0}">
-                    	<tr>
-                    		<td width="135" align="right">性别</td>
-                    		<td>
-                    			<input type="radio" value="1" name="sex" checked="checked"/>男
-                    			<input type="radio" value="0" name="sex"/>女
-                    		</td>
-                    	</tr>
+                     <tr>
+                   		<td width="135" align="right">性别</td>
+                   		<td>
+                   			<input type="radio" value="1" name="sex" checked="checked"/>男
+                   			<input type="radio" value="0" name="sex"/>女
+                   		</td>
+                   	</tr>
                         <tr>
                             <td width="135" align="right">密码</td>
                             <td>

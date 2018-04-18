@@ -5,70 +5,76 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.ibatis.session.SqlSession;
+
 import cn.easybuy.dao.news.NewsDao;
 import cn.easybuy.dao.news.NewsDaoImpl;
+import cn.easybuy.dao.news.NewsMapper;
 import cn.easybuy.entity.News;
+import cn.easybuy.mybatis.util.MyBatisUtil;
 import cn.easybuy.param.NewsParams;
 import cn.easybuy.utils.DataSourceUtil;
 import cn.easybuy.utils.Pager;
 import cn.easybuy.utils.Params;
 
-/**
- *
- */
+
 public class NewsServiceImpl implements NewsService {
 
 	public void deleteNews(String id) {// 删除新闻
-		Connection connection=null;
+		SqlSession session=null;
+		Integer count=0;
 		try {
-			connection=DataSourceUtil.openConnection();
-			NewsDao newsDao = new NewsDaoImpl(connection);
-			newsDao.deleteById(Integer.parseInt(id));
+			session=MyBatisUtil.createSession();
+			count=session.getMapper(NewsMapper.class).deleteById(id);
+			session.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally{
-			DataSourceUtil.closeConnection(connection);
+			MyBatisUtil.closeSession(session);
 		}
 	}
 
 	public News findNewsById(String id) {// 根据ID获取新闻
 		News news = null;
-		Connection connection=null;
+		SqlSession session=null;
 		try {
-			connection=DataSourceUtil.openConnection();
-			NewsDao newsDao = new NewsDaoImpl(connection);
-			news = newsDao.getNewsById(Integer.parseInt(id));
+			session=MyBatisUtil.createSession();
+			news=session.selectOne("cn.easybuy.dao.news.NewsMapper",id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DataSourceUtil.closeConnection(connection);
+			MyBatisUtil.closeSession(session);
 		}
 		return news;
 	}
 
 	public void addNews(News news) {// 保存新闻
-		Connection connection = null;
+			SqlSession session=null;
+			Integer count=0;
 		try {
-			connection = DataSourceUtil.openConnection();
-			NewsDao newsDao = new NewsDaoImpl(connection);
-			newsDao.add(news);
+			session=MyBatisUtil.createSession();
+			count=session.getMapper(NewsMapper.class).add(news);
+			session.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DataSourceUtil.closeConnection(connection);
+			MyBatisUtil.closeSession(session);
+			session.rollback();
 		}
 	}
 
 	public void updateNews(News news) {// 更新留言
-		Connection connection = null;
+			SqlSession session =null;
+			Integer count=0;
 		try {
-			connection = DataSourceUtil.openConnection();
-			NewsDao newsDao = new NewsDaoImpl(connection);
-			newsDao.update(news);
+			session=MyBatisUtil.createSession();
+			count=session.getMapper(NewsMapper.class).update(news);
+			session.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DataSourceUtil.closeConnection(connection);
+			MyBatisUtil.closeSession(session);
+			session.rollback();
 		}
 	}
 
@@ -93,33 +99,34 @@ public class NewsServiceImpl implements NewsService {
 	@Override
 	public List<News> queryNewsList(NewsParams param) {
 		List<News> newsList=new ArrayList<News>();
-		Connection connection = null;
+		SqlSession session=null;
 		try {
-			connection = DataSourceUtil.openConnection();
-			NewsDao newsDao = new NewsDaoImpl(connection);
-			newsList=newsDao.queryNewsList(param);
+			session=MyBatisUtil.createSession();
+			newsList=session.getMapper(NewsMapper.class).queryNewsList(param);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DataSourceUtil.closeConnection(connection);
+			MyBatisUtil.closeSession(session);
 		}
 		return newsList;
 	}
 
 	@Override
 	public Integer queryNewsCount(NewsParams param) {
-		Connection connection = null;
+		SqlSession session=null;
 		Integer count=0;
 		try {
-			connection = DataSourceUtil.openConnection();
-			NewsDao newsDao = new NewsDaoImpl(connection);
-			count=newsDao.queryNewsCount(param);
+			session=MyBatisUtil.createSession();
+			count=session.getMapper(NewsMapper.class).queryNewscount(param);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DataSourceUtil.closeConnection(connection);
-			return count;
+			MyBatisUtil.closeSession(session);
 		}
+		return count;
 	}
 
 }
+
+	
+	

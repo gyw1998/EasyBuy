@@ -35,9 +35,9 @@ public class UserServiceImpl implements UserService {
            session.commit();
         } catch (Exception e) {
             e.printStackTrace();
-            session.rollback();
         } finally {
         	 MyBatisUtil.closeSession(session);
+        	 session.rollback();
         }
         return count>0;
 	}
@@ -52,9 +52,9 @@ public class UserServiceImpl implements UserService {
            session.commit();
         } catch (Exception e) {
             e.printStackTrace();
-            session.rollback();
         } finally {
         	 MyBatisUtil.closeSession(session);
+        	 session.rollback();
         }
         return count>0;
 	}
@@ -69,9 +69,9 @@ public class UserServiceImpl implements UserService {
            session.commit();
         } catch (Exception e) {
             e.printStackTrace();
-            session.rollback();
         } finally {
         	 MyBatisUtil.closeSession(session);
+        	 session.rollback();
         }
         return count>0;
 	}
@@ -97,11 +97,8 @@ public class UserServiceImpl implements UserService {
 		SqlSession session=null;
     	List<User> list=new ArrayList<User>();
         try {
-            session=MyBatisUtil.createSession();
-            int total = count();
-			Pager pager = new Pager(total, pageSize, currentPageNo);
-			
-          list=session.getMapper(UserMapper.class).getUserList((pager.getCurrentPage() - 1) * pager.getRowPerPage(), pager.getRowPerPage());
+            session=MyBatisUtil.createSession();	
+          list=session.getMapper(UserMapper.class).getUserList((currentPageNo-1)*pageSize,pageSize);
            session.commit();
         } catch (Exception e) {
             e.printStackTrace();

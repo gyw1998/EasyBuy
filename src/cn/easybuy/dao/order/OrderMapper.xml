@@ -18,7 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 分页查询订单列表 -->
 	<select id="getOrderList" resultType="Order" >
 		select id,userId,loginName,userAddress,createTime,cost,serialNumber from easybuy_order  where 1=1 
-		<if test="userId!=null"> userId=#{userId}</if>
+		<if test="userId!=null">and userId=#{userId}</if>
 		 limit #{currentPageNo},#{pageSize}	
 		
 	</select>
