@@ -2,7 +2,9 @@ package cn.easybuy.service.product;
 
 import cn.easybuy.dao.product.ProductCategoryDao;
 import cn.easybuy.dao.product.ProductCategoryDaoImpl;
+import cn.easybuy.dao.product.ProductCategoryMapper;
 import cn.easybuy.entity.ProductCategory;
+import cn.easybuy.mybatis.util.MyBatisUtil;
 import cn.easybuy.param.ProductCategoryParam;
 import cn.easybuy.utils.DataSourceUtil;
 import cn.easybuy.utils.EmptyUtils;
@@ -12,6 +14,8 @@ import cn.easybuy.utils.ProductCategoryVo;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
 
 /**
  * Created by bdqn on 2016/5/8.
@@ -24,63 +28,64 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
      */
     @Override
     public ProductCategory getById(Integer id) {
-        Connection connection = null;
+        SqlSession session=null;
         ProductCategory productCategory = null;
         try {
-            connection = DataSourceUtil.openConnection();
-            ProductCategoryDao productCategoryDao = new ProductCategoryDaoImpl(connection);
-            productCategory =productCategoryDao.queryProductCategoryById(id);
+            session=MyBatisUtil.createSession();
+            ProductCategoryMapper productCategoryMapper=session.getMapper(ProductCategoryMapper.class);
+            productCategory =productCategoryMapper.queryProductCategoryById(id);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            DataSourceUtil.closeConnection(connection);
+           MyBatisUtil.closeSession(session);
         }
         return productCategory;
     }
 
     @Override
     public List<ProductCategory> queryProductCategoryList(ProductCategoryParam params) {
-        Connection connection = null;
+       SqlSession session=null;
         List<ProductCategory> rtn = null;
         try {
-            connection = DataSourceUtil.openConnection();
-            ProductCategoryDao productCategoryDao = new ProductCategoryDaoImpl(connection);
-            rtn = productCategoryDao.queryProductCategorylist(params);
+            session=MyBatisUtil.createSession();
+            ProductCategoryMapper productCategoryMapper=session.getMapper(ProductCategoryMapper.class);
+            rtn =productCategoryMapper.queryProductCategorylist(params);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            DataSourceUtil.closeConnection(connection);
+           MyBatisUtil.closeSession(session);
         }
         return rtn;
     }
 
     @Override
     public int queryProductCategoryCount(ProductCategoryParam params) {
-        Connection connection = null;
+       SqlSession session=null;
         int rtn = 0;
         try {
-            connection = DataSourceUtil.openConnection();
-            ProductCategoryDao productCategoryDao = new ProductCategoryDaoImpl(connection);
-            rtn = productCategoryDao.queryProductCategoryCount(params);
+            session=MyBatisUtil.createSession();
+            ProductCategoryMapper productCategoryMapper=session.getMapper(ProductCategoryMapper.class);
+            rtn = productCategoryMapper.queryProductCategoryCount(params);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            DataSourceUtil.closeConnection(connection);
+          MyBatisUtil.closeSession(session);
         }
         return rtn;
     }
 
     @Override
     public void modifyProductCategory(ProductCategory productCategory) {
-        Connection connection = null;
+        SqlSession session=null;
         try {
-            connection = DataSourceUtil.openConnection();
-            ProductCategoryDao productCategoryDao = new ProductCategoryDaoImpl(connection);
-            productCategoryDao.update(productCategory);
+           session=MyBatisUtil.createSession();
+           ProductCategoryMapper productCategoryMapper=session.getMapper(ProductCategoryMapper.class);
+           productCategoryMapper.update(productCategory);
+           session.commit();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            DataSourceUtil.closeConnection(connection);
+            MyBatisUtil.closeSession(session);
         }
     }
     /**
@@ -88,15 +93,16 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
      */
     @Override
     public void addProductCategory(ProductCategory productCategory) {
-        Connection connection = null;
+       SqlSession session=null;
         try {
-            connection = DataSourceUtil.openConnection();
-            ProductCategoryDao productCategoryDao = new ProductCategoryDaoImpl(connection);
-            productCategoryDao.add(productCategory);
+            session=MyBatisUtil.createSession();
+            ProductCategoryMapper productCategoryMapper=session.getMapper(ProductCategoryMapper.class);
+            productCategoryMapper.add(productCategory);
+            session.commit();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            DataSourceUtil.closeConnection(connection);
+            MyBatisUtil.closeSession(session);
         }
     }
     /**
@@ -105,15 +111,16 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
      */
     @Override
     public void deleteById(Integer id) {
-        Connection connection = null;
+       SqlSession session=null;
         try {
-            connection = DataSourceUtil.openConnection();
-            ProductCategoryDao productCategoryDao = new ProductCategoryDaoImpl(connection);
-            productCategoryDao.deleteById(id);
+            session=MyBatisUtil.createSession();
+            ProductCategoryMapper productCategoryMapper=session.getMapper(ProductCategoryMapper.class);
+            productCategoryMapper.deleteById(id);
+            session.commit();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            DataSourceUtil.closeConnection(connection);
+            MyBatisUtil.closeSession(session);
         }
     }
     /**
@@ -159,22 +166,22 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
      * @return
      */
     private List<ProductCategory> getProductCategories(Integer parentId) {//根据父ID查询所有子商品分类
-        Connection connection = null;
+        SqlSession session=null;
         List<ProductCategory> productCategoryList = null;
         try {
-            connection = DataSourceUtil.openConnection();
-            ProductCategoryDao productCategoryDao = new ProductCategoryDaoImpl(connection);
+           session=MyBatisUtil.createSession();
+           ProductCategoryMapper productCategoryMapper=session.getMapper(ProductCategoryMapper.class);
             ProductCategoryParam params = new ProductCategoryParam();
             if (EmptyUtils.isNotEmpty(parentId)) {
             	params.setParentId(parentId);
             } else {
             	params.setParentId(0);
             }
-            productCategoryList = productCategoryDao.queryProductCategorylist(params);
+            productCategoryList = productCategoryMapper.queryProductCategorylist(params);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            DataSourceUtil.closeConnection(connection);
+            MyBatisUtil.closeSession(session);
             return productCategoryList;
         }
     }

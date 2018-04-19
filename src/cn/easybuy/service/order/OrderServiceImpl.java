@@ -11,6 +11,7 @@ import org.apache.ibatis.session.SqlSession;
 import cn.easybuy.dao.order.*;
 import cn.easybuy.dao.product.ProductDao;
 import cn.easybuy.dao.product.ProductDaoImpl;
+import cn.easybuy.dao.product.ProductMapper;
 import cn.easybuy.utils.*;
 import cn.easybuy.entity.Order;
 import cn.easybuy.entity.OrderDetail;
@@ -31,13 +32,19 @@ public class OrderServiceImpl implements OrderService {
     public Order payShoppingCart(ShoppingCart cart, User user, String address) {
         // TODO Auto-generated method stub
         Connection connection = null;
+        SqlSession session=null;
         Order order = new Order();
         try {
             connection = DataSourceUtil.openConnection();
+            session=MyBatisUtil.createSession();
             connection.setAutoCommit(false);
-            ProductDao productDao = new ProductDaoImpl(connection);
-            OrderDao orderDao = new OrderDaoImpl(connection);
-            OrderDetailDao orderDetailDao = new OrderDetailDaoImpl(connection);
+            session.commit(false);
+            ProductMapper productMapper=session.getMapper(ProductMapper.class);
+            OrderMapper orderMapper=session.getMapper(OrderMapper.class);
+            OrderDetailMapper orderDetailMapper=session.getMapper(OrderDetailMapper.class);
+//            ProductDao productDao = new ProductDaoImpl(connection);
+//            OrderDao orderDao = new OrderDaoImpl(connection);
+//            OrderDetailDao orderDetailDao = new OrderDetailDaoImpl(connection);
             //增加订单
             order.setUserId(user.getId());
             order.setLoginName(user.getLoginName());
@@ -45,18 +52,21 @@ public class OrderServiceImpl implements OrderService {
             order.setCreateTime(new Date());
             order.setCost(cart.getTotalCost());
             order.setSerialNumber(StringUtils.randomUUID());
-            orderDao.add(order);
+            orderMapper.add(order);
+            System.out.println(order.getId());
             //增加订单对应的明细信息
             for (ShoppingCartItem item : cart.getItems()) {
                 OrderDetail orderDetail = new OrderDetail();
                 orderDetail.setOrderId(order.getId());
                 orderDetail.setCost(item.getCost());
+                orderDetail.setProductId(item.getProduct().getId());
                 orderDetail.setProduct(item.getProduct());
                 orderDetail.setQuantity(item.getQuantity());
-                orderDetailDao.add(orderDetail);
+                orderDetailMapper.add(orderDetail);
                 //更新商品表的库存
-                productDao.updateStock(item.getProduct().getId(), item.getQuantity());
+                productMapper.updateStock(item.getProduct().getId(), item.getQuantity());
                 connection.commit();
+                session.commit();
             }
         } catch (Exception e) {
             // TODO: handle exception
@@ -70,7 +80,9 @@ public class OrderServiceImpl implements OrderService {
         } finally {
             try {
                 connection.setAutoCommit(true);
+                session.commit(true);
                 DataSourceUtil.closeConnection(connection);
+                MyBatisUtil.closeSession(session);
             } catch (SQLException e) {
                 e.printStackTrace();
             }

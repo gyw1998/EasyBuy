@@ -163,8 +163,9 @@ public class CartServlet extends AbstractServlet {
         }
         //新增地址
         String addressId=request.getParameter("addressId");
-        String newAddress=request.getParameter("newAddress");
-        String newRemark=request.getParameter("newRemark");
+        //解决新增地址乱码问题
+        String newAddress=new String(request.getParameter("newAddress").getBytes("iso-8859-1"),"utf-8");
+        String newRemark=new String(request.getParameter("newRemark").getBytes("iso-8859-1"),"utf-8");
         UserAddress userAddress=new UserAddress();
         if(addressId.equals("-1")){
             userAddress.setRemark(newRemark);

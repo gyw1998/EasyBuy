@@ -10,7 +10,7 @@ import cn.easybuy.entity.Product;
 
 public interface ProductMapper {
 		//更新库存
-	    public Integer updateStock(@Param("productId") Integer productId,@Param("stock") Integer stock);
+	    public Integer updateStock(@Param("id") Integer productId,@Param("stock") Integer stock);
 		//增加商品
 		public Integer add(Product product);
 		//修改商品

@@ -18,6 +18,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<!-- <typeAlias type="cn.easybuy.entity.User" alias="User"/> -->
 		<!-- 包别名 -->
 		<package name="cn.easybuy.entity"/>
+		<package name="cn.easybuy.param"/>
 	</typeAliases>
 	<!-- 环境 -->
 	<environments default="development">
@@ -38,8 +39,10 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 	<mappers>
 		<mapper resource="cn/easybuy/dao/news/NewMapper.xml"/>
 		<mapper resource="cn/easybuy/dao/order/OrderMapper.xml"/>
+		<mapper resource="cn/easybuy/dao/order/UserAddressMapper.xml"/>
 		<mapper resource="cn/easybuy/dao/product/ProductMapper.xml"/>
 		<mapper resource="cn/easybuy/dao/order/OrderDetailMapper.xml"/>
 		<mapper resource="cn/easybuy/dao/user/UserMapper.xml"/>
+		<mapper resource="cn/easybuy/dao/product/ProductCategoryMapper.xml"/>
 	</mappers>
 </configuration>

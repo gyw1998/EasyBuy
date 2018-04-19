@@ -2,6 +2,21 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper>
-
+<mapper namespace="cn.easybuy.dao.order.UserAddressMapper">
+<!-- 分页显示用户地址列表 -->
+	<select id="queryUserAddressList" resultType="UserAddress">
+	select id,userId,address,createTime,isDefault,remark from easybuy_user_address  where 1=1
+	 <if test="userId!=null">and userId = #{userId} </if>
+	 <if test="address!=null and address!=''"> and address like concat('%',#{address},'%') </if> 
+	 <if test="sort!=null and sort!=''">order by #{sort} </if>
+	 <if test="isPage==true">limit #{startIndex},#{pageSize}</if>
+	</select>
+<!-- 添加用户地址 -->
+	<insert id="add" parameterType="UserAddress">
+	INSERT into easybuy_user_address(userId,address,createTime,isDefault,remark) VALUES(#{userId},#{address},#{createTime},0,#{remark})
+	</insert>
+<!-- 查询用户地址列表 -->
+<select id="getUserAddressById" resultType="UserAddress">
+	select id,userId,address,createTime,isDefault,remark from easybuy_user_address  where id=#{id}
+</select>
 </mapper>
