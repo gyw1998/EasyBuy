@@ -13,8 +13,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</delete> 
 	<!--查询订单详细 -->
 	<select id="getOrderDetailById" resultType="OrderDetail" parameterType="Integer">
-	select id,orderId,productId,quantity,cost FROM easybuy_order_detail where 1=1
-	and orderId=#{orderId}
+	select id,orderId,productId,quantity,cost FROM easybuy_order_detail where 
+	id=#{id}
 	</select> 
 	<resultMap type="OrderDetail" id="MyOrderDetail">
 		<result property="orderId" column="orderId"/>
@@ -33,7 +33,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	select orderId,productId,quantity,cost,p.id as p_id,p.name,p.fileName 
 	from 
 	easybuy_order_detail od,easybuy_product p 
-	where od.orderId = #{id} and od.productId=p.id
+	where 
+	od.orderId = #{id} and od.productId=p.id
 	</select>	
 	<!--查询所有订单数目详细 -->
 	<select id="queryOrderDetailCount" resultType="Integer">

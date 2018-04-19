@@ -25,7 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		
 	</select>
 	<!-- 查询所有订单数目 -->
-	<select id="count" resultType="Integer" parameterType="Integer">
+	<select id="count" resultType="Integer">
 		 select count(id) count from easybuy_order  where 1=1 
 		 <if test="userId!=null">and userId=#{userId}</if>
 	</select>

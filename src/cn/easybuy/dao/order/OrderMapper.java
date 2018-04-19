@@ -18,5 +18,5 @@ public interface OrderMapper{
 	//分页查询订单列表
 	public List<Order> getOrderList(@Param("userId")Integer userId,@Param("currentPageNo")Integer currentPageNo,@Param("pageSize")Integer pageSize);
 	//查询所有订单数目
-	public Integer count(Integer userId);
+	public Integer count(@Param("userId")Integer userId);
 }

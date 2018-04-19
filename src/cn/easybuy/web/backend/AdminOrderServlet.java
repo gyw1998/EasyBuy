@@ -33,6 +33,7 @@ public class AdminOrderServlet extends AbstractServlet{
     public String index(HttpServletRequest request,HttpServletResponse response)throws Exception{
         //获取用户id
         String userId=request.getParameter("userId");
+        System.out.println(userId);
         //获取当前页数
         String currentPageStr = request.getParameter("currentPage");
         //获取页大小

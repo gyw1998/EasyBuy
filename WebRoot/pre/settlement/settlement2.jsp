@@ -15,7 +15,7 @@
         <table border="0" class="car_tab" style="width:1110px;" cellspacing="0" cellpadding="0">
             <tr>
             	<td class="car_th" width="150">商品图片</td>
-                <td class="car_th" width="400">商品名称</td>
+                <td class="car_th" width="100">商品名称</td>
                 <td class="car_th" width="150">购买数量</td>
                 <td class="car_th" width="130">小计</td>
             </tr>
