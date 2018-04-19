@@ -41,7 +41,7 @@
                         </td>
                     </tr>
                  
-                    <c:if test="${empty user.id ||  user.id==0}">
+                    
                      <tr>
                    		<td width="135" align="right">性别</td>
                    		<td>
@@ -49,6 +49,7 @@
                    			<input type="radio" value="0" name="sex"/>女
                    		</td>
                    	</tr>
+                   	 <c:if test="${empty user.id ||  user.id==0}">
                         <tr>
                             <td width="135" align="right">密码</td>
                             <td>
@@ -61,7 +62,7 @@
                                 <input type="password" value="" class="add_ipt" name="repPassword"/>
                             </td>
                         </tr>
-                    </c:if>
+          			</c:if>
                     <tr>
                         <td width="135" align="right">身份证号</td>
                         <td>
