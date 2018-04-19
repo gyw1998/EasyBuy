@@ -31,13 +31,12 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order payShoppingCart(ShoppingCart cart, User user, String address) {
         // TODO Auto-generated method stub
-        Connection connection = null;
         SqlSession session=null;
         Order order = new Order();
         try {
-            connection = DataSourceUtil.openConnection();
+         
             session=MyBatisUtil.createSession();
-            connection.setAutoCommit(false);
+          
             session.commit(false);
             ProductMapper productMapper=session.getMapper(ProductMapper.class);
             OrderMapper orderMapper=session.getMapper(OrderMapper.class);
@@ -65,25 +64,24 @@ public class OrderServiceImpl implements OrderService {
                 orderDetailMapper.add(orderDetail);
                 //更新商品表的库存
                 productMapper.updateStock(item.getProduct().getId(), item.getQuantity());
-                connection.commit();
                 session.commit();
             }
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
             try {
-                connection.rollback();
-            } catch (SQLException e1) {
+                session.rollback();
+            } catch (Exception e1) {
                 e1.printStackTrace();
             }
             order = null;
         } finally {
             try {
-                connection.setAutoCommit(true);
+         
                 session.commit(true);
-                DataSourceUtil.closeConnection(connection);
+           
                 MyBatisUtil.closeSession(session);
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -122,7 +120,6 @@ public class OrderServiceImpl implements OrderService {
             count=session.getMapper(OrderMapper.class).count(userId);
         } catch (Exception e) {
             e.printStackTrace();
-            session.rollback();
         } finally {
         	 MyBatisUtil.closeSession(session);
         }

@@ -14,17 +14,20 @@
         </div>
         <table border="0" class="car_tab" style="width:1110px;" cellspacing="0" cellpadding="0">
             <tr>
-                <td class="car_th" width="550">商品名称</td>
+            	<td class="car_th" width="150">商品图片</td>
+                <td class="car_th" width="400">商品名称</td>
                 <td class="car_th" width="150">购买数量</td>
                 <td class="car_th" width="130">小计</td>
             </tr>
             <c:forEach items="${sessionScope.cart.items}" var="temp">
                 <tr>
-                    <td>
-                        <div class="c_s_img">
+                	<td align="center">
+                		<div class="c_s_img">
                             <img src="${ctx}/files/${temp.product.fileName}" width="73" height="73"/>
                         </div>
-                            ${temp.product.name}
+                    </td>
+                    <td align="center">
+                        ${temp.product.name}
                     </td>
                     <td align="center">${temp.quantity}</td>
                     <td align="center" style="color:#ff4e00;">￥${temp.cost}</td>
